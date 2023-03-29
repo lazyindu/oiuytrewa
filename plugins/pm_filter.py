@@ -1109,7 +1109,7 @@ async def auto_filter(client, msg, spoll=False):
     pre = 'filep' if settings['file_secure'] else 'file'
     if settings["button"]:
             if URL_MODE is True:
-                if message.from_user.id in ADMINS:
+                if message.from_user.id in ADMINS or MY_USERS:
                     btn = [
                         [
                             InlineKeyboardButton(
@@ -1127,6 +1127,15 @@ async def auto_filter(client, msg, spoll=False):
                         ]
                         for file in files
                         ]
+                elif message.chat.id in LAZY_GROUPS:
+                    btn = [
+                    [
+                        InlineKeyboardButton(
+                            text=f"[{get_size(file.file_size)}] {file.file_name}", callback_data=f'files#{file.file_id}'
+                        ),
+                    ]
+                    for file in files
+                    ]
                 else:
                     btn = [
                         [
@@ -1138,18 +1147,28 @@ async def auto_filter(client, msg, spoll=False):
                         for file in files
                     ]
             else    :
-                btn = [
-                    [
-                        InlineKeyboardButton(
-                            text=f"[{get_size(file.file_size)}] {file.file_name}", callback_data=f'{pre}#{file.file_id}'
-                        ),
+                if message.from_user.id in ADMINS or MY_USERS:
+                    btn = [
+                        [
+                            InlineKeyboardButton(
+                                text=f"[{get_size(file.file_size)}] {file.file_name}", callback_data=f'files#{file.file_id}'
+                            ),
+                        ]
+                        for file in files
                     ]
-                    for file in files
-                ]
+                else:    
+                    btn = [
+                        [
+                            InlineKeyboardButton(
+                                text=f"[{get_size(file.file_size)}] {file.file_name}", callback_data=f'{pre}#{file.file_id}'
+                            ),
+                        ]
+                        for file in files
+                    ]
 
     else:
         if URL_MODE is True:
-            if message.from_user.id in ADMINS:
+            if message.from_user.id in ADMINS or MY_USERS:
                 btn = [
                     [
                         InlineKeyboardButton(text=f"{file.file_name}",callback_data=f'files#{file.file_id}',),
@@ -1158,6 +1177,14 @@ async def auto_filter(client, msg, spoll=False):
                     for file in files
                 ]
             elif message.from_user.id in LZURL_PRIME_USERS:
+                btn = [
+                    [
+                        InlineKeyboardButton(text=f"{file.file_name}",callback_data=f'{pre}#{file.file_id}',),
+                        InlineKeyboardButton(text=f"{get_size(file.file_size)}",callback_data=f'{pre}#{file.file_id}',),
+                    ]
+                    for file in files
+                ]
+            elif message.chat.id in LAZY_GROUPS:
                 btn = [
                     [
                         InlineKeyboardButton(text=f"{file.file_name}",callback_data=f'{pre}#{file.file_id}',),
@@ -1174,7 +1201,7 @@ async def auto_filter(client, msg, spoll=False):
                     for file in files
                 ]
         else:
-            if message.form_user.id in ADMINS:
+            if message.form_user.id in ADMINS or MY_USERS:
                 btn = [
                     [
                         InlineKeyboardButton(text=f"{file.file_name}",callback_data=f'files#{file.file_id}',),
@@ -1243,7 +1270,7 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"Baby, Here is what i found for your query {search}"
+        cap = f"⚡Baby, Here is what i found for your query {search}"
     if imdb and imdb.get('poster'):
         try:
             z = await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
@@ -1314,7 +1341,7 @@ async def advantage_spell_chok(msg):
     movielist += [(re.sub(r'(\-|\(|\)|_)', '', i, flags=re.IGNORECASE)).strip() for i in gs_parsed]
     movielist = list(dict.fromkeys(movielist))  # removing duplicates
     if not movielist:
-        k = await msg.reply("Hey Sona! The requested content is currently unavailable in our database, have some patience 🙂 - our great admin will upload it as soon as possible \n             **or**\nDiscuss issue with admin here 👉  <a href='https://t.me/Discusss_Here'>Discuss Here</a> ♥️ ")
+        k = await msg.reply("Hey Sona! The requested content is currently unavailable in our database, have some patience 🙂 - our great admin will upload it as soon as possible \n\n             **or**\n\nDiscuss issue with admin here 👉  <a href='https://t.me/Discusss_Here'>Discuss Here</a> ♥️ ")
         await asyncio.sleep(10)
         await k.delete()
         return
@@ -1326,7 +1353,7 @@ async def advantage_spell_chok(msg):
         )
     ] for k, movie in enumerate(movielist)]
     btn.append([InlineKeyboardButton(text="Close", callback_data=f'spolling#{user}#close_spellcheck')])
-    await msg.reply("Hey Sona! The requested content is currently unavailable in our database, have some patience 🙂 - our great admin will upload it as soon as possible \n              **or**\nDiscuss issue with admin here 👉 <a href='https://t.me/Discusss_Here'>Discuss Here</a> ♥️ ",
+    await msg.reply("Hey sona, did you checked your spelling properly, here are some suggestions for you, please check if your reuested content match anyone of these following suggestions...\n\n               **or**\nDiscuss issue with admin here 👉 <a href='https://t.me/Discusss_Here'>Discuss Here</a> ♥️ ",
                     reply_markup=InlineKeyboardMarkup(btn))
 
 
