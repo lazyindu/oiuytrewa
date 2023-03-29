@@ -1127,7 +1127,7 @@ async def auto_filter(client, msg, spoll=False):
                         ]
                         for file in files
                         ]
-                elif message.chat.id in LAZY_GROUPS:
+                elif message.chat.id is not None and message.chat.id in LAZY_GROUPS:
                     btn = [
                     [
                         InlineKeyboardButton(
@@ -1184,7 +1184,7 @@ async def auto_filter(client, msg, spoll=False):
                     ]
                     for file in files
                 ]
-            elif message.chat.id in LAZY_GROUPS:
+            elif message.chat.id is not None and message.chat.id in LAZY_GROUPS:
                 btn = [
                     [
                         InlineKeyboardButton(text=f"{file.file_name}",callback_data=f'{pre}#{file.file_id}',),
