@@ -1131,7 +1131,7 @@ async def auto_filter(client, msg, spoll=False):
                     btn = [
                     [
                         InlineKeyboardButton(
-                            text=f"[{get_size(file.file_size)}] {file.file_name}", callback_data=f'files#{file.file_id}'
+                            text=f"[{get_size(file.file_size)}] {file.file_name}", callback_data=f'{pre}#{file.file_id}'
                         ),
                     ]
                     for file in files
@@ -1141,12 +1141,12 @@ async def auto_filter(client, msg, spoll=False):
                         [
                             InlineKeyboardButton(
                                 text=f"[{get_size(file.file_size)}] {file.file_name}", 
-                                url=await get_shortlink(f"https://telegram.dog/{temp.U_NAME}?start=files_{file.file_id}")
+                                url=await get_shortlink(f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
                             ),
                         ]
                         for file in files
                     ]
-            else    :
+            else:
                 if message.from_user.id in ADMINS or MY_USERS:
                     btn = [
                         [
